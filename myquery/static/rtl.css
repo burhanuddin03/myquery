@@ -1,0 +1,24 @@
+.f_left {
+	float: right !important;
+}
+.f_right {
+	float: left !important;
+}
+h1 {
+	line-height: 32px;
+}
+h2 {
+	line-height: 30px;
+}
+h3 {
+	line-height: 26px;
+}
+h4 {
+	line-height: 24px;
+}
+h5 {
+	line-height: 22px;
+}
+h6 {
+	line-height: 20px;
+}

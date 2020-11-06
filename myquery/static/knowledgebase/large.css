@@ -1,0 +1,24 @@
+@media screen and (min-width: 1200px) {
+  /*CONTACT SECTION*/
+  .contact-section .our-team .team-list {
+    width: 100%;
+    overflow: hidden; }
+  .contact-section .our-team .team-list li {
+    width: 263px;
+    float: left; }
+  .contact-section .our-team .team-list li:nth-child(2n+1) {
+    margin-right: 29px; }
+
+  /*END CONTACT SECTION*/
+  /*home articles*/
+  .wrap-home-art {
+    margin-bottom: 51px; }
+
+  .b-art {
+    margin-bottom: 0;
+    width: 24.34210526315789%; }
+
+  .b-art.is-big {
+    width: 51.2719298245614%; }
+
+  /*end home articles*/ }

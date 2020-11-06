@@ -1,0 +1,37 @@
+@media screen and (min-width: 992px) {
+  /*single post page*/
+  .related-block .articles-list {
+    overflow: hidden;
+    width: 100%;
+    padding-bottom: 26px; }
+  .related-block .articles-list li {
+    margin-left: 3.5377358490566%;
+    margin-bottom: 29px;
+    width: 30.89622641509434%;
+    float: left; }
+  .related-block .articles-list li:nth-child(3n+1) {
+    margin-left: 0; }
+
+  .detail-comments .comments-list {
+    padding-top: 10px; }
+
+  /*end single post page*/
+  /*faqs block*/
+  .faq-section ul.short-list-nav li a .wrap-icon {
+    font-size: 65px; }
+
+  .faq-section ul.short-list-nav li a .text {
+    font-size: 15px; }
+
+  /*end faqs block*/
+  /*category page*/
+  .cat-articles.new-type li .wrap-article .in-article .text {
+    width: 34.00236127508855%; }
+  .cat-articles.new-type li .wrap-article .in-article .media {
+    width: 65.999%; }
+  .cat-articles.new-type li .wrap-article .in-article.left .text, .cat-articles.new-type li .wrap-article .in-article.left .media {
+    float: left; }
+  .cat-articles.new-type li .wrap-article .in-article.right .text, .cat-articles.new-type li .wrap-article .in-article.right .media {
+    float: right; }
+
+  /*end category page*/ }
