@@ -1,0 +1,347 @@
+{% extends 'index.html' %}
+{% load colours %}
+{% load static %}
+{% block body_block %}
+      <!-- =-=-=-=-=-=-= Main Area =-=-=-=-=-=-= -->
+     
+      <div class="main-content-area">
+         <!-- =-=-=-=-=-=-= Page Breadcrumb =-=-=-=-=-=-= -->
+         <section class="page-title">
+            <div class="container">
+               <div class="row">
+                  <div class="col-md-6 col-sm-7 co-xs-12 text-left">
+                     <h1>Question Detail</h1>
+                  </div>
+                  <!-- end col -->
+                  <div class="col-md-6 col-sm-5 co-xs-12 text-right">
+                     <div class="bread">
+                        <ol class="breadcrumb">
+                           <li><a href="{% url 'myqueryapp:index' %}">Home</a>
+                           </li>
+                           <li class="active">Question</li>
+                        </ol>
+                     </div>
+                     <!-- end bread -->
+                  </div>
+                  <!-- end col -->
+               </div>
+               <!-- end row -->
+            </div>
+            <!-- end container -->
+         </section>
+         <!-- =-=-=-=-=-=-= Page Breadcrumb End =-=-=-=-=-=-= -->
+         <!-- =-=-=-=-=-=-= Question Details =-=-=-=-=-=-= -->
+         <section class="section-padding-80 white question-details" style="width: 100%;">
+            <div class="container">
+               <!-- Row -->
+               <div class="row">
+                  <div class="col-md-8 col-lg-8 col-sm-12 col-xs-12">
+                     <!-- Question Detail -->
+                     <!-- Question Listing -->
+                     <div class="listing-grid ">
+                        <div class="row">
+                           <div class="col-md-12 col-sm-12 col-xs-12">
+                              <h3><a  href="#"> {{ question.Title }} </a></h3>
+                              <div class="listing-meta"> <span><i class="fa fa-clock-o" aria-hidden="true"></i>{{ question.Qcreated }}</span> <span><i class="fa fa fa-eye" aria-hidden="true"></i> 750 Views</span> </div>
+                           </div>
+                           <div class="col-md-12 col-sm-12 col-xs-12">
+                              <p> {{ question.Details }} </p>
+                              {% for total_files in files %}
+                               <a href="{{ total_files.File.url }}">
+                                 {% if total_files.helper %}
+                                  <img src="{{ total_files.File.url }}" style="width: 100%;height: 100%;"></a>
+                                  {% else %}
+                                  <figure>
+                                  <img src="{% static 'images/pdff.png' %}"><figcaption>{{total_files.File.name }}</figcaption>
+                                  </figure>
+                                  {% endif %}
+                               {% endfor %}
+                              <strong>Html Structure</strong>
+                             
+                              
+         
+                              <div class="tagcloud">
+                                 {% for i in question.Tags.all %}
+                                  <a href="">{{ i.Tag_name }}</a>
+                                  {% endfor %} 
+                               </div>
+                           </div>
+                        </div>
+                     </div>
+                     <!-- Question Listing End -->
+                     <div class="clearfix"></div>
+                     <!-- Thread Reply -->
+                     <div style="color:black;" class="thread-reply">
+                        <h2>Thread Reply </h2>
+                        <!-- Reply Grid -->
+                        {% for all in ans %}
+                        <div class="media-block card-box ribbon-content">
+                           {% if all.Corrected %}
+                           <div class="ribbon base"><span>Correct Answer</span>
+                           </div>
+                           {% endif %}
+                           <div class="media-left">
+                              <a data-toggle="tooltip" data-placement="bottom" data-original-title="Martina Jaz" href="#">
+                              <img class="img-sm" alt="Profile Picture" src="{{ all.User.profile_pic.url }}">
+                              </a>
+                           </div>
+                           <div class="media-body">
+                              <div class="mar-btm">
+                                 <h4><a href="#" class="btn-link text-semibold media-heading box-inline">{{ all.User.username }}</a></h4>
+                                 <p class="text-muted text-sm"><i class="fa fa-mobile fa-lg"></i>  {{ all.Acreated }}</p>
+                              </div>
+                              <p>{{ all.Details }}</p>
+                              {% for allimg in all.answerimage_set.all %}
+                              <img src="{{ allimg.Image.url }}" style="width: 100%;height: 100%;">
+                              <br><br>
+                              {% endfor %}
+                              <!-- <pre class="brush: php syntaxhighlight">
+.navbar .navbar-nav {
+    display: inline-block;
+    float: none;
+    vertical-align: top;
+    }
+
+    .navbar .navbar-collapse {
+    text-align: center;
+    }
+}                            
+</pre>
+                              <p><strong>Edit: </strong>if you only want this effect to happen when the nav isn't collapsed surround it in the appropriate media query.</p>
+                              <pre class="brush: php syntaxhighlight">
+@media (min-width: 768px) {
+    .navbar .navbar-nav {
+    display: inline-block;
+    float: none;
+    vertical-align: top;
+    }
+
+
+    .navbar .navbar-collapse {
+    text-align: center;
+    }
+}
+                              </pre> -->
+                              <div class="pad-ver pull-right">
+                                 <p>{{ all.Like_count }} Likes</p>
+                                 <form style="display: inline;" method="POST">
+                                    {% csrf_token %}
+                                    {% if user|colour:all %}
+                                 <button type="submit" style="background-color: grey;" class="btn btn-sm btn-default btn-hover-success" value="{{ all.pk }}" name="like" data-toggle="tooltip" data-placement="bottom" data-original-title="Like This Answer"><i class="fa fa-thumbs-up"></i></button>
+                                 {% else %}
+                                 <button type="submit" class="btn btn-sm btn-default btn-hover-success" value="{{ all.pk }}" name="like" data-toggle="tooltip" data-placement="bottom" data-original-title="Like This Answer"><i class="fa fa-thumbs-up"></i></button>
+                                 {% endif %}                              
+                              </form>
+                              <form method="POST" style="display: inline;">
+                                 {% csrf_token %} 
+                                 {% if user|colour1:all %}                                
+                                 <button type="submit" style="background-color: grey;" class="btn btn-sm btn-default btn-hover-danger" name="dislike" value="{{ all.pk }}" data-original-title="Spam" data-placement="bottom" data-toggle="tooltip"><i class="fa fa-thumbs-down"></i></a>
+                                   {% else %}
+                                   <button type="submit"  class="btn btn-sm btn-default btn-hover-danger" name="dislike" value="{{ all.pk }}" data-original-title="Spam" data-placement="bottom" data-toggle="tooltip"><i class="fa fa-thumbs-down"></i></a>
+                                 {% endif %}
+                                 </form>
+                                 {% if correction and not all.Corrected %}
+                              <form method="POST" style="display: inline;">
+                                 {% csrf_token %}
+                                 <button type="submit" class="btn btn-sm btn-default btn-hover-primary" name="correct" value="{{ all.pk }}">Mark As Correct</button>
+                              </form>
+                              {% endif %}
+                              {% if correction and all.Corrected %}
+                              <form method="POST" style="display: inline;">
+                                 {% csrf_token %}
+                                 <button type="submit" class="btn btn-sm btn-default btn-hover-primary" name="uncorrect" value="{{ all.pk }}">Mark Uncorrected</button>
+                              </form>
+                              {% endif %}
+                                 {% if user.is_authenticated %}
+                                 <button onclick="add({{ all.pk }})" style="background-color:#BE161E; margin-left: 5px;" type="button" class="btn btn-danger">Reply</button>
+                                 {% else %}
+                                 <button onclick="add({{ all.pk }})" style="background-color:#BE161E; margin-left: 5px;" type="button" class="btn btn-danger" disabled>Reply</button>
+                                 {% endif %}
+                              </div>
+                              
+                              <div id="a">
+                                 <br><br>
+                                 <div id="{{ all.pk }}">
+                                   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+     
+   <form method="POST">  
+        {% csrf_token %}                          
+   <div id="new_chq"></div>
+   <br>
+   <input type="hidden" value="{{ all.pk }}" id="total_chq">
+   <div id="sbmt"></div>
+   
+   
+</form>
+{% for allreply in all.replie_set.all %}
+   <div class="mar-btm">
+      <h4><a href="#" class="btn-link text-semibold media-heading box-inline">{{ allreply.User.username }} Replied></a></h4>
+      <p class="text-muted text-sm"><i class="fa fa-mobile fa-lg"></i>  {{ allreply.Rcreated }}</p>
+   </div>
+   <pre>{{ allreply.Details }}</pre>
+                                   <br>
+                                   {% endfor %}
+                                   
+                                 </div>
+                               </div>
+                           </div>
+                        </div>
+                        {% endfor %}
+                        <!-- Reply Grid End -->
+                        <!-- Reply Grid
+                        <div class="media-block card-box ">
+                           <div class="media-left">
+                              <a href="#">
+                              <img class="img-sm" alt="Profile Picture" src="images/authors/7.jpg">
+                              </a>
+                           </div>
+                           <div class="media-body">
+                              <div class="mar-btm">
+                                 <h4><a href="#" class="btn-link text-semibold media-heading box-inline">Martina Jaz</a></h4>
+                                 <p class="text-muted text-sm"><i class="fa fa-mobile fa-lg"></i> - From Mobile - 21 min ago</p>
+                              </div>
+                              <p>I think this is what you are looking for. You need to remove the <code>float: left</code> from the inner nav to center it and make it a inline-block.</p>
+                              <pre class="brush: php syntaxhighlight">
+$('#nav').affix({
+      offset: {
+        top: $('header').height()
+      }
+});
+                                </pre>
+                              <div class="pad-ver pull-right">
+                                 <a class="btn btn-sm btn-default btn-hover-success" data-toggle="tooltip" data-placement="bottom" data-original-title="Like This Answer" href="#"><i class="fa fa-thumbs-up"></i></a>
+                                 <a class="btn btn-sm btn-default btn-hover-danger" href="#" data-original-title="Spam" data-placement="bottom" data-toggle="tooltip"><i class="fa fa-thumbs-down"></i></a>
+                                 <a class="btn btn-sm btn-default btn-hover-primary" href="#">Mark As Correct</a>
+                              </div>
+                           </div>
+                        </div> -->
+                        <!-- Reply Grid End -->
+                        <!-- Reply Grid -->
+                        <!-- <div class="media-block card-box ">
+                           <div class="media-left">
+                              <a href="#">
+                              <img class="img-sm" alt="Profile Picture" src="images/authors/6.jpg">
+                              </a>
+                           </div>
+                           <div class="media-body">
+                              <div class="mar-btm">
+                                 <h4><a href="#" class="btn-link text-semibold media-heading box-inline">John Doe</a></h4>
+                                 <p class="text-muted text-sm"><i class="fa fa-mobile fa-lg"></i> - From Mobile - 40 min ago</p>
+                              </div>
+                              <p>I think this is what you are looking for. You need to remove the <code>float: left</code> from the inner nav to center it and make it a inline-block.</p>
+                              <pre class="brush: php syntaxhighlight">
+$(function(){
+    $('.block').affix();
+})
+                                </pre>
+                              <div class="pad-ver pull-right">
+                                 <a class="btn btn-sm btn-default btn-hover-success" data-toggle="tooltip" data-placement="bottom" data-original-title="Like This Answer" href="#"><i class="fa fa-thumbs-up"></i></a>
+                                 <a class="btn btn-sm btn-default btn-hover-danger" href="#" data-original-title="Spam" data-placement="bottom" data-toggle="tooltip"><i class="fa fa-thumbs-down"></i></a>
+                                 <a class="btn btn-sm btn-default btn-hover-primary" href="#">Mark As Correct</a>
+                              </div>
+                           </div>
+                        </div>
+                         Reply Grid End -->
+                        <div class="clearfix"></div>
+                        <form method="POST" enctype="multipart/form-data">
+                           {% csrf_token %}
+                           <div class="form-group">
+                              <label>Post Your Answer</label>
+                              <textarea cols="12" rows="7" name="answer" class="form-control" placeholder="I Have The Answer"></textarea>
+
+                           </div>
+                           <input type="file" id="myfile" name="myImage" accept="image/*" multiple><br><br>
+                           {% if user.is_authenticated %}
+                           <button type="submit" name="Answer-button" class="btn btn-primary btn-lg btn-block">Post Your Answer</button>
+                           {% else %}
+                           <label>*Please Login to post your answer</label>
+                           <button type="submit" name="Answer-button" class="btn btn-primary btn-lg btn-block" disabled>Post Your Answer</button>
+                           {% endif %}
+                        </form>
+                     </div>
+                     <!-- Thread Reply End -->
+                  </div>
+                  <!-- Right Sidebar -->
+                  <div class="col-md-4 col-sm-12 col-xs-12 clearfix">
+                     <!-- sidebar -->
+                     <div class="side-bar">
+                        <div class="widget">
+                           <div class="widget-image widget-image-sm">
+                              <!-- <img alt="image" src="images/light-background.jpg"> -->
+                              <!-- <div class="widget-image-content text-center" style="border:1px solid black;">
+                                 <img class="img-thumbnail"  alt="avatar" src="{{ question.User.profile_pic.url }}">
+                                 <p>asdsadasdasda</p>
+                                 <h2 class="widget-heading text-light" style="color: black;"><strong>{{ question.User.username }}</strong></h2>
+                                 <h4 class="widget-heading text-light-op" style="background-color: black;"><em>Graphic Designer</em></h4>
+                              </div>
+                           </div> -->
+                           <!-- <div class="widget-content widget-content-full border-bottom">
+                              <div class="row text-center">
+                                 <div class="col-xs-6 push-inner-top-bottom border-right">
+                                    <h3 class="widget-heading"><i class=" icon-trophy push"></i> <br>
+                                       <small><strong>34,157</strong> Experience</small>
+                                    </h3>
+                                 </div>
+                                 <div class="col-xs-6 push-inner-top-bottom">
+                                    <h3 class="widget-heading"><i class=" icon-profile-male themed-color-social push"></i> <br>
+                                       <small><strong>58.6k</strong> Followers</small>
+                                    </h3>
+                                 </div>
+                              </div>
+                           </div> -->
+                           <div class="widget-content border-bottom">
+                              <center>
+                              <img class="img-thumbnail" alt="avatar" src="{{ question.User.profile_pic.url }}">
+                           
+                              <h4>{{ question.User.username|capfirst }}</h4>
+                              <p>{{ question.User.email }}</p>
+                           </center>
+                           </div>
+                           <div class="widget-content">
+                              <div class="btn-group"> <a title="" data-toggle="tooltip" class="btn btn-default" href="javascript:void(0)" data-original-title="Facebook"><i class="fa fa-facebook fa-fw"></i></a> <a title="" data-toggle="tooltip" class="btn btn-default" href="javascript:void(0)" data-original-title="Twitter"><i class="fa fa-twitter fa-fw"></i></a> <a title="" data-toggle="tooltip" class="btn btn-default" href="javascript:void(0)" data-original-title="Google Plus"><i class="fa fa-google-plus fa-fw"></i></a> <a title="" data-toggle="tooltip" class="btn btn-default" href="javascript:void(0)" data-original-title="Pinterest"><i class="fa fa-pinterest fa-fw"></i></a> </div>
+                           </div>
+                        </div>
+                        <!-- widget -->
+                        <div class="widget">
+                           <div class="recent-comments">
+                              <h2>Hot Questions</h2>
+                              <hr class="widget-separator no-margin">
+                              <ul>
+                                 {% for i in questions %}
+                                 <li><a href="{% url 'questions:qd' pk=i.pk %}">{{ i.Title }}</a>
+                                 </li>
+                                 {% endfor %}
+                                 
+                              </ul>
+                           </div>
+                        </div>
+                        <!-- widget -->
+                        <!-- widget -->
+                        <div class="widget">
+                           <div class="recent-comments">
+                              <h2>Recent Comments</h2>
+                              <hr class="widget-separator no-margin">
+                              <ul id="recentcomments">
+                                 {% for alls in recent %}
+                                 <li class="recentcomments"> <span class="comment-author-link">{{ alls.User.username|capfirst }}</span> on <a href="{% url 'questions:qd' pk=alls.Question.pk %}">{{ alls.Question.Title }}</a> </li>
+                                  {% endfor %}
+                              </ul>
+                           </div>
+                        </div>
+                        <!-- widget end -->
+                     </div>
+                     <!-- sidebar end -->
+                  </div>
+                  <!-- Right Sidebar End -->
+               </div>
+               <!-- Row End -->
+            </div>
+         </section>
+</div> 
+        
+         <!-- =-=-=-=-=-=-= Question Details end =-=-=-=-=-=-= -->
+{% endblock %}
+
+{% block footer %}
+
+{% endblock %}

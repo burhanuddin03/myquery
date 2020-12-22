@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'myqueryapp.apps.MyqueryappConfig',
     'bootstrap4',
+    'questions.apps.QuestionsConfig',
 ]
 
 MIDDLEWARE = [
@@ -134,6 +135,7 @@ os.path.join(BASE_DIR,'static'),
 MEDIA_URL='/media/'
 MEDIA_ROOT=os.path.join(BASE_DIR,"media")
 
+LOGIN_URL='myqueryapp:login'
 LOGIN_REDIRECT_URL='/'
 LOGOUT_REDIRECT_URL="/"
 

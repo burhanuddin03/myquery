@@ -1,0 +1,74 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block body_block %}
+      <!-- =-=-=-=-=-=-= Main Area =-=-=-=-=-=-= -->
+      <div class="main-content-area">
+         <!-- =-=-=-=-=-=-= Page Breadcrumb =-=-=-=-=-=-= -->
+         <section class="page-title">
+            <div class="container">
+               <div class="row">
+                  <div class="col-md-6 col-sm-7 co-xs-12 text-left">
+                     <h1>How It Works</h1>
+                  </div>
+                  <!-- end col -->
+                  <div class="col-md-6 col-sm-5 co-xs-12 text-right">
+                     <div class="bread">
+                        <ol class="breadcrumb">
+                           <li><a href="#">Home</a>
+                           </li>
+                           <li><a href="#">Pages</a>
+                           </li>
+                           <li class="active">How It Work</li>
+                        </ol>
+                     </div>
+                     <!-- end bread -->
+                  </div>
+                  <!-- end col -->
+               </div>
+               <!-- end row -->
+            </div>
+            <!-- end container -->
+         </section>
+         <!-- =-=-=-=-=-=-= Page Breadcrumb End =-=-=-=-=-=-= -->
+         <!-- =-=-=-=-=-=-= Blog & News =-=-=-=-=-=-= -->
+         <section id="blog" class="custom-padding white">
+            <div class="container">
+               <!-- Row -->
+               <div class="row">
+                  <div class="col-sm-4 col-md-4 col-xs-12  center-responsive">
+                     <img src="{% static 'images/step1.png' %}" class="img-responsive" alt="">
+                     <h4><a href="#">Create An Account</a></h4>
+                  </div>
+                  <div class="col-sm-4 col-md-4 col-xs-12 center-responsive get-arrow">
+                     <img src="{% static 'images/step2.png' %}" class="img-responsive" alt="">
+                     <h4><a href="#">Post Your Question</a></h4>
+                  </div>
+                  <div class="col-sm-4 col-md-4 col-xs-12 center-responsive get-arrow">
+                     <img src="{% static 'images/step3.png' %}" class="img-responsive" alt="">
+                     <h4><a href="#"> Find Your Solution</a></h4>
+                  </div>
+                  <div class="clearfix"></div>
+               </div>
+               <!-- Row End -->
+            </div>
+            <!-- end container -->
+         </section>
+         <!-- =-=-=-=-=-=-= Blog & News end =-=-=-=-=-=-= -->
+         {% endblock %}
+         {% block js %}
+         {% load static %}
+      <!-- FOR THIS PAGE ONLY -->
+      <script src="{% static 'js/imagesloaded.js' %}"></script>
+      <script src="{% static 'js/isotope.min.js' %}"></script>
+      <script type="text/javascript">
+         (function($) {
+           "use strict";
+           $('#posts-masonry').imagesLoaded(function() {
+             $('#posts-masonry').isotope({
+               layoutMode: 'masonry',
+               transitionDuration: '0.3s'
+             });
+           });
+         })(jQuery);
+      </script>
+{% endblock %}

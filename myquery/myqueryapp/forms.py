@@ -3,14 +3,14 @@ from django import forms
 from django.contrib.auth import get_user_model
 
 class CustomLoginForm(AuthenticationForm):
-	username = UsernameField(
+	username = forms.CharField(
 		label='',
-		widget=forms.TextInput(attrs={'class':'form-control','placeholder':'Username'})
+		widget=forms.TextInput(attrs={'class':'form-control','style':'width:100%;height:100%','placeholder':'Username'})
 	)
 	password=forms.CharField(
 		label="",
 		strip=False ,
-		widget=forms.PasswordInput(attrs={'class':'form-control','placeholder':'Password'}),
+		widget=forms.PasswordInput(attrs={'class':'form-control','style':'width:100%;height:100%','placeholder':'Password'}),
 	)
 
 class UserRegisterForm(UserCreationForm):
@@ -20,7 +20,7 @@ class UserRegisterForm(UserCreationForm):
 		fields=('username','email','password1','password2','profile_pic')
 		
 		widgets={
-			'username':forms.TextInput(attrs={'class':'form-control','placeholder':'UserName','id':'user_username'}),
+			'username':forms.TextInput(attrs={'class':'form-control','style':'width:100%;height:100%','placeholder':'UserName','id':'user_username'}),
 			'email':forms.EmailInput(attrs={'class':'form-control','placeholder':'Email','id':'user_email'}),
 			'password1':forms.PasswordInput(attrs={'class':'form-control','placeholder':'Password','id':'user_userpass'}),
 			'password2':forms.PasswordInput(attrs={'class':'form-control','placeholder':'Password','id':'user_userpassreenter'}),
@@ -29,6 +29,7 @@ class UserRegisterForm(UserCreationForm):
 
 	def clean_username(self):
 		username=self.cleaned_data['username']
+		print(username)
 		if get_user_model().objects.filter(username__iexact=username).exists():
 			raise forms.ValidationError('User already exist with this username')
 		return username 
