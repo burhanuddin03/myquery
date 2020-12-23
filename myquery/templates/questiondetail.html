@@ -10,7 +10,7 @@
             <div class="container">
                <div class="row">
                   <div class="col-md-6 col-sm-7 co-xs-12 text-left">
-                     <h1>Question Detail</h1>
+                     <h1 style="font-style: italic;font-size: x-large;"><b>Question Detail</b></h1>
                   </div>
                   <!-- end col -->
                   <div class="col-md-6 col-sm-5 co-xs-12 text-right">
@@ -88,7 +88,7 @@
                            <div class="media-body">
                               <div class="mar-btm">
                                  <h4><a href="#" class="btn-link text-semibold media-heading box-inline">{{ all.User.username }}</a></h4>
-                                 <p class="text-muted text-sm"><i class="fa fa-mobile fa-lg"></i>  {{ all.Acreated }}</p>
+                                 <p class="text-muted text-sm"><i class="fa fa-mobile"></i>  {{ all.Acreated }}</p>
                               </div>
                               <p>{{ all.Details }}</p>
                               {% for allimg in all.answerimage_set.all %}
@@ -123,23 +123,31 @@
 }
                               </pre> -->
                               <div class="pad-ver pull-right">
-                                 <p>{{ all.Like_count }} Likes</p>
-                                 <form style="display: inline;" method="POST">
+                                 <p  id="list_counter{{ all.pk }}"><i style="margin-left: 5px;" class="fas fa-heart"></i>  {{ all.Like_count }}  <i style="margin-left: 5px;" class="fas fa-heart-broken"></i>  {{ all.Dislike_count }}</p>
+                                 {% if user.is_authenticated %}
+                                 {% if user.pk == all.User.pk %}
+                              <form method="POST" style="display: inline;">
+                                 <a class="btn btn-sm btn-default btn-hover-primary" href="{% url 'questions:delete-answer' apk=all.Question.pk pk=all.pk %}" name="del" value="{{ all.pk }}"><i class="fa fa-trash"></i></a>
+                              </form>
+                              {% endif %}
+                              
+                                 <form style="display: inline;" action="" method="POST" myattr="{{ all.pk }}" class="Like-form">
                                     {% csrf_token %}
                                     {% if user|colour:all %}
-                                 <button type="submit" style="background-color: grey;" class="btn btn-sm btn-default btn-hover-success" value="{{ all.pk }}" name="like" data-toggle="tooltip" data-placement="bottom" data-original-title="Like This Answer"><i class="fa fa-thumbs-up"></i></button>
+                                 <button id="like_button{{ all.pk }}" type="submit" style="background-color: grey;" class="btn btn-sm btn-default btn-hover-success" value="{{ all.pk }}" name="like" data-toggle="tooltip" data-placement="bottom" data-original-title="Like This Answer"><i class="fa fa-thumbs-up"></i></button>
                                  {% else %}
-                                 <button type="submit" class="btn btn-sm btn-default btn-hover-success" value="{{ all.pk }}" name="like" data-toggle="tooltip" data-placement="bottom" data-original-title="Like This Answer"><i class="fa fa-thumbs-up"></i></button>
+                                 <button id="like_button{{ all.pk }}" type="submit" class="btn btn-sm btn-default btn-hover-success" value="{{ all.pk }}" name="like" data-toggle="tooltip" data-placement="bottom" data-original-title="Like This Answer"><i class="fa fa-thumbs-up"></i></button>
                                  {% endif %}                              
                               </form>
-                              <form method="POST" style="display: inline;">
+                              <form method="POST" style="display: inline;" myattr="{{ all.pk }}" class="Dislike-form">
                                  {% csrf_token %} 
                                  {% if user|colour1:all %}                                
-                                 <button type="submit" style="background-color: grey;" class="btn btn-sm btn-default btn-hover-danger" name="dislike" value="{{ all.pk }}" data-original-title="Spam" data-placement="bottom" data-toggle="tooltip"><i class="fa fa-thumbs-down"></i></a>
+                                 <button type="submit" id="dislike_button{{ all.pk }}" style="background-color: grey;" class="btn btn-sm btn-default btn-hover-danger" name="dislike" value="{{ all.pk }}" data-original-title="Spam" data-placement="bottom" data-toggle="tooltip"><i class="fa fa-thumbs-down"></i></a>
                                    {% else %}
-                                   <button type="submit"  class="btn btn-sm btn-default btn-hover-danger" name="dislike" value="{{ all.pk }}" data-original-title="Spam" data-placement="bottom" data-toggle="tooltip"><i class="fa fa-thumbs-down"></i></a>
+                                   <button type="submit"  id="dislike_button{{ all.pk }}" class="btn btn-sm btn-default btn-hover-danger" name="dislike" value="{{ all.pk }}" data-original-title="Spam" data-placement="bottom" data-toggle="tooltip"><i class="fa fa-thumbs-down"></i></a>
                                  {% endif %}
                                  </form>
+                                 {% endif %}   
                                  {% if correction and not all.Corrected %}
                               <form method="POST" style="display: inline;">
                                  {% csrf_token %}
@@ -152,6 +160,7 @@
                                  <button type="submit" class="btn btn-sm btn-default btn-hover-primary" name="uncorrect" value="{{ all.pk }}">Mark Uncorrected</button>
                               </form>
                               {% endif %}
+                              
                                  {% if user.is_authenticated %}
                                  <button onclick="add({{ all.pk }})" style="background-color:#BE161E; margin-left: 5px;" type="button" class="btn btn-danger">Reply</button>
                                  {% else %}
@@ -176,7 +185,13 @@
 {% for allreply in all.replie_set.all %}
    <div class="mar-btm">
       <h4><a href="#" class="btn-link text-semibold media-heading box-inline">{{ allreply.User.username }} Replied></a></h4>
-      <p class="text-muted text-sm"><i class="fa fa-mobile fa-lg"></i>  {{ allreply.Rcreated }}</p>
+      <p class="text-muted text-sm"><i class="fa fa-mobile"></i>  {{ allreply.Rcreated }}</p>
+      {% if user.pk == allreply.User.pk %}
+                              <!-- <form method="POST" style="display: inline;"> -->
+      <a style="display: inline;float: right;margin-left: 5px;margin-top: 4px;" class="btn btn-sm btn-default btn-hover-primary" href="{% url 'questions:delete-reply' apk=all.Question.pk pk=allreply.pk %}" name="del" value="{{ all.pk }}"><i class="fa fa-trash"></i></a>
+                              <!-- </form> -->
+                              {% endif %}
+
    </div>
    <pre>{{ allreply.Details }}</pre>
                                    <br>
@@ -262,9 +277,9 @@ $(function(){
                      <!-- Thread Reply End -->
                   </div>
                   <!-- Right Sidebar -->
-                  <div class="col-md-4 col-sm-12 col-xs-12 clearfix">
+                  <div class="col-md-4 col-sm-12 col-xs-12 clearfix" >
                      <!-- sidebar -->
-                     <div class="side-bar">
+                     <div class="side-bar" >
                         <div class="widget">
                            <div class="widget-image widget-image-sm">
                               <!-- <img alt="image" src="images/light-background.jpg"> -->
@@ -298,9 +313,19 @@ $(function(){
                            </center>
                            </div>
                            <div class="widget-content">
-                              <div class="btn-group"> <a title="" data-toggle="tooltip" class="btn btn-default" href="javascript:void(0)" data-original-title="Facebook"><i class="fa fa-facebook fa-fw"></i></a> <a title="" data-toggle="tooltip" class="btn btn-default" href="javascript:void(0)" data-original-title="Twitter"><i class="fa fa-twitter fa-fw"></i></a> <a title="" data-toggle="tooltip" class="btn btn-default" href="javascript:void(0)" data-original-title="Google Plus"><i class="fa fa-google-plus fa-fw"></i></a> <a title="" data-toggle="tooltip" class="btn btn-default" href="javascript:void(0)" data-original-title="Pinterest"><i class="fa fa-pinterest fa-fw"></i></a> </div>
+                              <div class="btn-group" style="margin-left: 20px;"> 
+                                 <center>
+                                 <a title="" data-toggle="tooltip" class="btn btn-default" href="javascript:void(0)" data-original-title="Facebook"><i class="fab fa-facebook-f"></i></a> 
+                                 <a title="" data-toggle="tooltip" class="btn btn-default" href="javascript:void(0)" data-original-title="Twitter"><i class="fab fa-twitter"></i></a>
+                                  <a title="" data-toggle="tooltip" class="btn btn-default" href="javascript:void(0)" data-original-title="Google Plus"><i class="fab fa-google"></i></a>
+                                   <a title="" data-toggle="tooltip" class="btn btn-default" href="javascript:void(0)" data-original-title="Pinterest"><i class="fab fa-pinterest"></i></a> 
+                                   <!-- <a title="" data-toggle="tooltip" class="btn btn-default" href="javascript:void(0)" data-original-title="Dribbble"><i class="fab fa-dribbble"></i></a> -->
+                                 </center>
+                                 </div>
                            </div>
                         </div>
+                        </div>
+                        
                         <!-- widget -->
                         <div class="widget">
                            <div class="recent-comments">
@@ -344,4 +369,93 @@ $(function(){
 
 {% block footer %}
 
+{% endblock %}
+{% block js %}
+<script>
+   function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+const csrftoken = getCookie('csrftoken');
+$('.Like-form').on('submit',function(e){
+e.preventDefault();
+var p = 'list_counter'+$(this).attr("myattr");
+var likebutton = $('#like_button'+$(this).attr("myattr"));
+var dislikebutton =  $('#dislike_button'+$(this).attr("myattr"));
+$.ajax({
+				url:"{% url 'questions:qd' pk=question.pk %}",
+				data:{
+	            'like':$(this).attr("myattr"),
+					csrfmiddlewaretoken:csrftoken,
+				},
+				type:'POST',
+				success:function(response)
+				{
+               if (response.num == 1)
+               {
+                   likebutton.css('background-color','white');
+               }
+               else if (response.num == 2)
+               {
+                  console.log("hello")
+                   dislikebutton.css('background-color','white');
+                   likebutton.css('background-color','grey');
+               }
+               else{
+                  likebutton.css('background-color','grey');
+               }
+               var text = "<i style='margin-left: 5px;' class='fas fa-heart'></i>  "+response.counter+"  <i style='margin-left: 5px;' class='fas fa-heart-broken'></i>  "+response.dislikecounter;
+               console.log(text);
+               document.getElementById(p).innerHTML=text;
+				
+				},
+			});
+
+});
+$('.Dislike-form').on('submit',function(e){
+e.preventDefault();
+var p = 'list_counter'+$(this).attr("myattr");
+var likebutton = $('#like_button'+$(this).attr("myattr"));
+var dislikebutton =  $('#dislike_button'+$(this).attr("myattr"));
+$.ajax({
+				url:"{% url 'questions:qd' pk=question.pk %}",
+				data:{
+	            'dislike':$(this).attr("myattr"),
+					csrfmiddlewaretoken:csrftoken,
+				},
+				type:'POST',
+				success:function(response)
+				{ 
+               if (response.num == 1)
+               {
+                   dislikebutton.css('background-color','white');
+               }
+               else if (response.num == 2)
+               {
+                   likebutton.css('background-color','white');
+                   dislikebutton.css('background-color','grey');
+               }
+               else{
+                  dislikebutton.css('background-color','grey');
+               }
+               var text ="<i style='margin-left: 5px;' class='fas fa-heart'></i>  "+response.counter+"  <i style='margin-left: 5px;' class='fas fa-heart-broken'></i>  "+response.dislikecounter;
+               console.log(text);
+               document.getElementById(p).innerHTML=text;
+				
+				},
+			});
+
+});
+</script>
 {% endblock %}

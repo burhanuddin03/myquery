@@ -11,6 +11,7 @@
 	<link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon" />
 	<!-- =-=-=-=-=-=-= Mobile Specific =-=-=-=-=-=-= -->
 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
 	<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
 	<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min-ar.css' %}">
@@ -77,7 +78,11 @@
     <!-- =-=-=-=-=-=-= Css Animation =-=-=-=-=-=-= -->
     <link type="text/css" rel="stylesheet" href="{% static 'css/animate.min.css' %}" />
     <!-- =-=-=-=-=-=-= Hover Dropdown =-=-=-=-=-=-= -->
-    <link type="text/css" rel="stylesheet" href="{% static 'css/bootstrap-dropdownhover.min.css' %}" />
+	<link type="text/css" rel="stylesheet" href="{% static 'css/bootstrap-dropdownhover.min.css' %}" />
+	<style>
+		{% block css %}
+		{% endblock %}
+	</style>
 	
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -101,21 +106,30 @@
 					</li>
 					<li  class=""><a href="{% url 'myqueryapp:contactus' %}">Contact Us</a>
 					</li>
+					{% if user.is_authenticated %}
+					<li  class=""><a href="{% url 'myqueryapp:dashboard' %}">Dashboard</a>
+					</li>
+					{% endif %}
 				</ul>
 			</div>
 			<div class="col-lg-8 col-md-8 col-sm-6 col-xs-8">
 				<ul class="top-nav nav-right">
+					{% if user.is_authenticated %}
+					<li>
+					 <a href="{% url 'myqueryapp:update' %}"><i class="fas fa-user-cog" aria-hidden="true"></i>Profile Update</a>
+					</li>
+					{% endif %}
 					<li><a href="{% url 'myqueryapp:login' %}"><i class="fa fa-lock" aria-hidden="true"></i>Login</a>
 					</li>
 					<li><a href="{% url 'myqueryapp:register' %}"><i class="fa fa-user-plus" aria-hidden="true"></i>Signup</a>
 					</li>
 					{% if user.is_authenticated %}
-					<li><a href="{% url 'myqueryapp:logout' %}"><i class="fa fa-user-plus" aria-hidden="true"></i>Logout</a></li>
+					<li><a href="{% url 'myqueryapp:logout' %}"><i class="fas fa-sign-out-alt" aria-hidden="true"></i>Logout</a></li>
 					{% endif %}
 					<li class="dropdown">
 						<a class="dropdown-toggle" data-hover="dropdown" data-toggle="dropdown" data-animations="fadeInUp">
 							
-							<span class="hidden-xs small-padding">
+							<span class="hidden-xs small-padding"></span>
 								{% if user.is_authenticated %}
 								{% if user.profile_pic %}
 							<img class="img-circle resize" alt="" src="{{ user.profile_pic.url }}">
@@ -126,11 +140,11 @@
 							</span>
 						</a>
 						<ul class="dropdown-menu ">
-							<li><a href="profile.html"><i class=" icon-bargraph"></i> Dashboard</a></li>
-							<li><a href="profile-setting.html"><i class=" icon-gears"></i> Profile Setting</a></li>
-							<li><a href="question-list.html"><i class="icon-heart"></i> Questions</a></li>
-							<li><a href="#"><i class="icon-lock"></i> Logout</a></li>
-						</ul>
+							<li><a style="color:black!important;" href="{% url 'myqueryapp:dashboard' %}"><i class=" icon-bargraph"></i> Dashboard</a></li>
+							<li><a style="color:black;" href="{% url 'myqueryapp:update' %}"><i class=" icon-gears"></i> Profile Setting</a></li>
+							<li><a style="color:black;" href="question-list.html"><i class="icon-heart"></i> Questions</a></li>
+							<li><a style="color:black;" href="#"><i class="icon-lock"></i> Logout</a></li>
+					 </ul>
 					 </li>
 				</ul>
 			</div>
@@ -201,8 +215,8 @@
 		<div class="search-area container">
 			<h3 class="search-title">Have a Question?</h3>
 			<p class="search-tag-line">If you have any question you can ask below or enter what you are looking for!</p>
-			<form autocomplete="off" method="get" class="search-form clearfix" id="search-form">
-				<input type="text" title="* Please enter a search term!" placeholder="Type your search terms here" class="search-term " autocomplete="off">
+			<form autocomplete="off" method="get" class="search-form clearfix" id="search-form" action="{% url 'myqueryapp:search' %}">
+				<input type="text" name="search" title="* Please enter a search term!" placeholder="Type your search terms here" class="search-term " autocomplete="off">
 				<input type="submit" value="Search" class="search-btn">
 			</form>
 		</div>
@@ -220,14 +234,34 @@
 							<div class="panel-heading">
 								<!-- Tabs -->
 								<ul class="nav panel-tabs">
-									<li> <a data-toggle="tab" href="#tab1"><i class="icofont icon-ribbon"></i><span class="hidden-xs">Recent Questions</span></a>
+									{% if index1 %}
+									<li class="active"> <a data-toggle="tab" href="{% url 'myqueryapp:index' %}"><i class="fas fa-bookmark"></i><span class="hidden-xs">Recent Questions</span></a>
 									</li>
-									<li> <a data-toggle="tab" href="#tab2"><i class="icofont icon-layers"></i><span class="hidden-xs">Popular Responses</span></a>
+									{% else %}
+									<li> <a data-toggle="tab" href="{% url 'myqueryapp:index' %}"><i class="fas fa-bookmark"></i><span class="hidden-xs">Recent Questions</span></a>
 									</li>
-									<li class="active"> <a data-toggle="tab" href="#tab3"><i class="icofont icon-global"></i><span class="hidden-xs">Recently Answered</span></a>
+									{% endif %}
+									{% if index2 %}
+									<li class="active"> <a data-toggle="tab" href="{% url 'myqueryapp:index2' %}"><i class="fas fa-layer-group"></i><span class="hidden-xs">Popular Responses</span></a>
 									</li>
-									<li> <a data-toggle="tab" href="#tab4"><i class="icofont icon-linegraph"></i><span class="hidden-xs">No answers</span></a>
+									{% else %}
+									<li> <a data-toggle="tab" href="{% url 'myqueryapp:index2' %}"><i class="fas fa-layer-group"></i><span class="hidden-xs">Popular Responses</span></a>
 									</li>
+									{% endif %}
+									{% if index3 %}
+									<li class="active"> <a data-toggle="tab" href="{% url 'myqueryapp:index3' %}"><i class="fas fa-globe"></i><span class="hidden-xs">Recently Answered</span></a>
+									</li>
+									{% else %}
+									<li> <a data-toggle="tab" href="{% url 'myqueryapp:index3' %}"><i class="fas fa-globe"></i><span class="hidden-xs">Recently Answered</span></a>
+									</li>
+									{% endif %}
+									{% if index4 %}
+									<li class="active"> <a data-toggle="tab" href="{% url 'myqueryapp:index4' %}"><i class="fas fa-dna"></i><span class="hidden-xs">No answers</span></a>
+									</li>
+									{% else %}
+									<li> <a data-toggle="tab" href="{% url 'myqueryapp:index4' %}"><i class="fas fa-dna"></i><span class="hidden-xs">No answers</span></a>
+									</li>
+									{% endif %}
 								</ul>
 							</div>
 						</div>
@@ -252,9 +286,7 @@
 											</div>
 											<div class="col-md-3 col-sm-2 col-xs-12">
 												<ul class="question-statistic">
-													<li class="active"> <a data-toggle="tooltip" data-placement="bottom" data-original-title="Answers"><span>332</span></a>
-													</li>
-													<li> <a data-toggle="tooltip" data-placement="bottom" data-original-title="Votes"><span>55</span></a>
+													<li class="active"> <a data-toggle="tooltip" data-placement="bottom" data-original-title="Answers"><span>{{ every.answer_set.count }}</span></a>
 													</li>
 												</ul>
 											</div>
@@ -397,6 +429,9 @@
 	<script src="{% static 'js/question-detail.js' %}" type="text/javascript"></script>
 	<script src="http://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
 	<script src="http://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+	<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+	{% block js %}
+	{% endblock %}
 </body>
 
 </html>

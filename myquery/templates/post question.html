@@ -89,61 +89,35 @@
             <!-- sidebar -->
             <div class="side-bar">
 
+               <!-- widget -->
+               <div class="widget">
+                <div class="recent-comments">
+                   <h2>Hot Questions</h2>
+                   <hr class="widget-separator no-margin">
+                   <ul>
+                      {% for i in questions %}
+                      <li><a href="{% url 'questions:qd' pk=i.pk %}">{{ i.Title }}</a>
+                      </li>
+                      {% endfor %}
+                      
+                   </ul>
+                </div>
+             </div>
+
               <!-- widget -->
               <div class="widget">
                 <div class="recent-comments">
-                  <h2>Hot Questions</h2>
-                  <hr class="widget-separator no-margin">
-                  <ul>
-                    <li><a href="#">Twitter Bootsrap 3.0 - tabs-left not working anymore?</a>
-                    </li>
-                    <li><a href="#">Changing the color on my tabbed left bootstrap3 tabs</a>
-                    </li>
-                    <li><a href="#">How to create tabs on the left in bootstrap.js v3.0.0? </a>
-                    </li>
-                    <li><a href="#">A Repository class - would you use it to handle multi records? </a>
-                    </li>
-
-                    <li><a href="#">post data from html form to php script and return result to ajax/js/jquery </a>
-                    </li>
-                  </ul>
+                   <h2>Recent Comments</h2>
+                   <hr class="widget-separator no-margin">
+                   <ul id="recentcomments">
+                      {% for alls in recent %}
+                      <li class="recentcomments"> <span class="comment-author-link">{{ alls.User.username|capfirst }}</span> on <a href="{% url 'questions:qd' pk=alls.Question.pk %}">{{ alls.Question.Title }}</a> </li>
+                       {% endfor %}
+                   </ul>
                 </div>
-              </div>
-              <!-- widget -->
-
-              <!-- widget -->
-              <div class="widget">
-                <div class="latest-news">
-                  <h2>Latest News</h2>
-                  <hr class="widget-separator no-margin">
-
-                  <div class="news-post">
-                    <div class="post">
-                      <figure class="post-thumb"><img alt="" src="images/blog/small-1.png">
-                      </figure>
-                      <h4><a href="#">Differentiate Yourself And Attract More Attention </a></h4>
-                      <div class="post-info">1 hour ago</div>
-                    </div>
-
-                    <div class="post">
-                      <figure class="post-thumb"><img alt="" src="images/blog/small-2.png">
-                      </figure>
-                      <h4><a href="#">Differentiate Yourself And Attract More Attention </a></h4>
-                      <div class="post-info">1 hour ago</div>
-                    </div>
-
-                    <div class="post">
-                      <figure class="post-thumb"><img alt="" src="images/blog/small-3.png">
-                      </figure>
-                      <h4><a href="#">Differentiate Yourself And Attract More Attention </a></h4>
-                      <div class="post-info">1 hour ago</div>
-                    </div>
-
-                  </div>
-
-                </div>
-              </div>
-              <!-- widget end -->
+             </div>
+             <!-- widget end -->
+              
 
             </div>
             <!-- sidebar end -->

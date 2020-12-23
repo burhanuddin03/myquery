@@ -1,0 +1,67 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block body_block %}
+
+<!-- =-=-=-=-=-=-= Main Area =-=-=-=-=-=-= -->
+<div class="main-content-area">
+
+	<!-- =-=-=-=-=-=-= Page Breadcrumb =-=-=-=-=-=-= -->
+
+
+     <!-- =-=-=-=-=-=-= User History =-=-=-=-=-=-= -->
+
+    <section class="section-padding-80 white">
+
+            <div class="container">
+
+            <!-- Row -->
+            <div class="row">
+
+
+
+            <div class="col-md-12 col-xs-12 col-sm-12">
+			<!-- Question Listing -->
+			{% for obj in AllQuestion %}
+									<div class="listing-grid">
+										<div class="row">
+											<div class="col-md-2 col-sm-2 col-xs-12 hidden-xs">
+												<a data-toggle="tooltip" data-placement="bottom" data-original-title="Martina Jaz" href="#">
+													<img alt="" class="img-responsive center-block" src="{{ obj.User.profile_pic.url }}">
+												</a>
+											</div>
+											<div class="col-md-7 col-sm-8  col-xs-12">
+												<h3><a  href="{% url 'questions:qd' pk=obj.pk %}"> {{ obj.Title }}</a></h3>
+												<div class="listing-meta"> <span><i class="fa fa-clock-o" aria-hidden="true"></i>{{ obj.Qcreated }}</span>  <span><i class="fa fa fa-eye" aria-hidden="true"></i> 750 Views</span>
+												</div>
+											</div>
+											<div class="col-md-3 col-sm-2 col-xs-12">
+												<ul class="question-statistic">
+													<li class="active"> <a data-toggle="tooltip" data-placement="bottom" data-original-title="Answers"><span>2</span></a>
+													</li>
+													<li> <a data-toggle="tooltip" data-placement="bottom" data-original-title="Votes"><span>0</span></a>
+													</li>
+												</ul>
+											</div>
+											<div class="col-md-10 col-sm-10  col-xs-12">
+												<p>{{ obj.Details }}</p>
+												<div class="pull-right tagcloud">
+													{% for i in question.Tags.all %}
+													<a href="">{{ i.Tag_name }}</a>
+													{% endfor %}
+												</div>
+											</div>
+										</div>
+									</div>
+									{% endfor %}
+									<!-- Question Listing End -->
+</div>
+</section>
+            </div>
+
+
+                                                </div>
+
+                                                </div>
+
+    </section>
+    {% endblock %}

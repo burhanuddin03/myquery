@@ -1,5 +1,7 @@
 {% extends 'index.html' %}
 {% load static %}
+{% block css %}
+{% endblock %}
 {% block body_block %}
 
 <!-- =-=-=-=-=-=-= Main Area =-=-=-=-=-=-= -->
@@ -39,15 +41,15 @@
                 <div class="col-md-6 col-xs-12 col-sm-6 no-padding">
                   <div class="profile-avatar">
                     <span><img class="img-responsive img-circle" alt="" src="{{ user.profile_pic.url }}"></span>
-                    <div class="profile-name">
-                      <h3 style="margin-top: 20px;">{{ user.username|capfirst }}</h3>
+                    <div style="margin-top: 20px;" class="profile-name">
+                      <h3>{{ user.username|capfirst }}</h3>
                       <i>{{ user.email }}</i>
                       <ul class="social-btns">
-                        <li><a href="#" title=""><i class="fa fa-facebook"></i></a>
+                        <li><a href="#" title=""><i class="fab fa-facebook"></i></a>
                         </li>
-                        <li><a href="#" title=""><i class="fa fa-google-plus"></i></a>
+                        <li><a href="#" title=""><i class="fab fa-google-plus"></i></a>
                         </li>
-                        <li><a href="#" title=""><i class="fa fa-twitter"></i></a>
+                        <li><a href="#" title=""><i class="fab fa-twitter"></i></a>
                         </li>
                       </ul>
                     </div>
@@ -55,9 +57,9 @@
                 </div>
                 <div class="col-md-6 col-xs-12 col-sm-6 no-padding">
                   <ul class="profile-count">
-                    <li>120<i>Questions</i>
+                    <li>{{ User_Question.count }}<i>Questions</i>
 					</li>
-					<li>171<i>Answered</i>
+					<li>{{ user.answer_set.all.count }}<i>Answered</i>
                     </li>
                   </ul>
                   <!-- <ul class="profile-connect">
@@ -81,7 +83,7 @@
     <!-- =-=-=-=-=-=-= User Profile end =-=-=-=-=-=-= -->
 
      <!-- =-=-=-=-=-=-= User History =-=-=-=-=-=-= -->
-
+     
     <section class="section-padding-80 white">
 
             <div class="container">
@@ -101,16 +103,16 @@
 													<img alt="" class="img-responsive center-block" src="{{ obj.User.profile_pic.url }}">
 												</a>
 											</div>
-											<div class="col-md-7 col-sm-8  col-xs-12">
+											<div  class="col-md-7 col-sm-8  col-xs-12">
 												<h3><a  href="{% url 'questions:qd' pk=obj.pk %}"> {{ obj.Title }}</a></h3>
 												<div class="listing-meta"> <span><i class="fa fa-clock-o" aria-hidden="true"></i>{{ obj.Qcreated }}</span>  <span><i class="fa fa fa-eye" aria-hidden="true"></i> 750 Views</span>
 												</div>
 											</div>
 											<div class="col-md-3 col-sm-2 col-xs-12">
 												<ul class="question-statistic">
-													<li class="active"> <a data-toggle="tooltip" data-placement="bottom" data-original-title="Answers"><span>2</span></a>
+													<li class="active"> <a data-toggle="tooltip" data-placement="bottom" data-original-title="Answers"><span>{{ obj.answer_set.all.count }}</span></a>
 													</li>
-													<li> <a data-toggle="tooltip" data-placement="bottom" data-original-title="Votes"><span>0</span></a>
+													<li> <a class="anchor-to-delete" href="{% url 'questions:question-delete' pk=obj.pk %}" data-toggle="tooltip" data-placement="bottom" data-original-title="Votes"><span><i class="fa fa-trash"></i></span></a>
 													</li>
 												</ul>
 											</div>
@@ -136,4 +138,8 @@
                                                 </div>
 
     </section>
+    {% endblock %}
+
+    {% block js %}
+
     {% endblock %}

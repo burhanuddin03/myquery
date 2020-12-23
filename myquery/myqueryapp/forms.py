@@ -1,6 +1,27 @@
 from django.contrib.auth.forms import UserCreationForm,AuthenticationForm,UsernameField
 from django import forms
 from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import PasswordResetForm,SetPasswordForm
+
+
+class CustomPasswordResetForm(PasswordResetForm):
+
+    def __init__(self,*args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['email'].label=''
+        self.fields['email'].widget.attrs={'class':'form-control','placeholder':'✉ Your Email','style':'width:100%;'}
+    
+
+class PasswordConfirmForm(SetPasswordForm):
+    
+    def __init__(self,*args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # self.fields['new_password1'].help_text = None
+        # self.fields['new_password2'].help_text = None
+        self.fields['new_password1'].label=''
+        self.fields['new_password2'].label=''
+        self.fields['new_password1'].widget.attrs={'class':'input-box','placeholder':'🗝 Your Password'}
+        self.fields['new_password2'].widget.attrs={'class':'input-box','placeholder':'🗝 Confirm Password'}
 
 class CustomLoginForm(AuthenticationForm):
 	username = forms.CharField(

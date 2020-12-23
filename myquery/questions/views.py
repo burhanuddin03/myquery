@@ -5,7 +5,8 @@ from django.contrib.auth.decorators import login_required
 from .models import Categorie,Tag,Question,files,Answer,AnswerImage,Replie,Like,Dislike
 from django.urls import reverse_lazy
 from django.shortcuts import render,redirect
-
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import JsonResponse
 
 # Create your views here.
 @login_required
@@ -38,7 +39,11 @@ def PostQuestionView(request):
         return render(request,'post question.html',{'Cats':Cat})
     else:
         Cat = Categorie.objects.all()
-        return render(request,'post question.html',{'Cats':Cat})
+        AllQuestion = Question.objects.all().order_by('-Qcreated')
+        AllQuestion = AllQuestion[:5]
+        new = list(Answer.objects.order_by('-Acreated'))
+        new = new[:7]
+        return render(request,'post question.html',{'Cats':Cat,'questions':AllQuestion,'recent':new})
 
 class qdView(DetailView):
     template_name = "questiondetail.html"
@@ -76,16 +81,16 @@ class qdView(DetailView):
         elif 'like' in request.POST:
             Ans = request.POST['like']
             print(Ans)
-            print("a")
             obj2 = Answer.objects.get(pk=int(Ans))
             i=Like.objects.filter(Answer=obj2,User=request.user).exists()
-            # print(i)
             j=Dislike.objects.filter(Answer=obj2,User=request.user).exists()
+            num = 1
             if i:
                 ob = Like.objects.get(Answer=obj2,User=request.user)
                 ob.delete()
                 obj2.Like_count-=1
                 obj2.save()
+                num = 1
             elif j:
                 ob = Dislike.objects.get(Answer=obj2,User=request.user)
                 ob.delete()
@@ -94,24 +99,26 @@ class qdView(DetailView):
                 obj2.save()
                 obj = Like(Answer=obj2,User=request.user)
                 obj.save()
+                num = 2
             else:
                 obj2.Like_count+=1
                 obj2.save()
                 obj = Like(Answer=obj2,User=request.user)
                 obj.save()
-            print("abcd")
-            return redirect("questions:qd",pk=self.kwargs.get("pk"))
+                num = 3
+            return JsonResponse({'counter':obj2.Like_count,'dislikecounter':obj2.Dislike_count,'num':num})
         elif 'dislike' in request.POST:
             Ans = request.POST['dislike']
             obj2 = Answer.objects.get(pk=int(Ans))
             i=Like.objects.filter(Answer=obj2,User=request.user).exists()
-            # print(i)
             j=Dislike.objects.filter(Answer=obj2,User=request.user).exists()
+            num = 1
             if j:
                 ob = Dislike.objects.get(Answer=obj2,User=request.user)
                 ob.delete()
                 obj2.Dislike_count-=1
                 obj2.save()
+                num = 1
             elif i:
                 ob = Like.objects.get(Answer=obj2,User=request.user)
                 ob.delete()
@@ -120,12 +127,14 @@ class qdView(DetailView):
                 obj2.save()
                 obj = Dislike(Answer=obj2,User=request.user)
                 obj.save()
+                num =2
             else:
                 obj2.Dislike_count+=1
                 obj2.save()
                 obj = Dislike(Answer=obj2,User=request.user)
                 obj.save()
-            return redirect("questions:qd",pk=self.kwargs.get("pk"))
+                num = 3
+            return JsonResponse({'counter':obj2.Like_count,'dislikecounter':obj2.Dislike_count,'num':num})
         elif 'correct' in request.POST:
             Ans = request.POST['correct']
             obj2 = Answer.objects.get(pk=int(Ans))
@@ -152,3 +161,44 @@ def DashboardView(request):
     obj = Question.objects.filter(User=request.user)
     print(obj)
     return render(request,"questions.html",{'User_Question':obj})
+
+class SearchListView(ListView):
+    template_name='List.html'
+    context_object_name='AllQuestion'
+    model=Question
+    paginate_by=6
+
+    def get_queryset(self):
+        search=None
+        if 'search' in self.request.GET:
+            search=self.request.GET['search']
+        else:
+            raise Http404()
+        search=search.lower()
+        Question_query=self.model.objects.filter(Title__icontains=search)
+        Question_category_query=self.model.objects.filter(Categorie__Categorie_name__icontains=search)
+        Question_tags_query=self.model.objects.filter(Tags__Tag_name__icontains=search)
+        return Question_query.union(Question_category_query.union(Question_tags_query)).order_by('-pk')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["search"] =self.request.GET['search'] 
+        return context
+
+class DeleteQuestionView(LoginRequiredMixin,DeleteView):
+    model=Question
+    success_url=reverse_lazy("myqueryapp:dashboard")
+
+class DeleteAnswerView(LoginRequiredMixin,DeleteView):
+    model=Answer
+
+    def get_success_url(self):
+        success_url = reverse_lazy('questions:qd',kwargs={'pk':self.kwargs['apk']})
+        return success_url
+
+class DeleteReplyView(LoginRequiredMixin,DeleteView):
+    model=Replie
+
+    def get_success_url(self):
+        success_url = reverse_lazy('questions:qd',kwargs={'pk':self.kwargs['apk']})
+        return success_url
